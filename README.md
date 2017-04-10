@@ -40,3 +40,14 @@ public class Movie
 
 <h2>@Model.Name</h2>
 ```
+
+&nbsp;
+## 03 Add the *Lumen* Bootstrap theme
+* Get the *Lumen* theme css code from Bootswatch.com.
+* Add it in *Content* as *bootstrap-lumen.css*.
+* Edit *App_Start/BundleConfig.cs* in order to set the theme to *Lumen*.
+```
+bundles.Add(new StyleBundle("~/Content/css").Include(
+                      "~/Content/bootstrap-lumen.css",
+                      "~/Content/site.css"));
+```                      
