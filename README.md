@@ -1,4 +1,4 @@
-### Vidly
+# Vidly
 [The Complete ASP.NET MVC 5 Course](https://www.udemy.com/the-complete-aspnet-mvc-5-course/)
 
 &nbsp;
@@ -15,4 +15,28 @@ public class Movie
         public int Id { get; set; }
         public string Name { get; set; }
     }
+```
+
+&nbsp;
+## 02 Add the *MoviesController* controller and the *Random* movies view
+* In *Controllers* add the empty *MoviesController*.
+* Create the *Random* action. It contains an instance of the *Movie* model for the movie named "Shrek!" for demonstration.
+```
+    // GET: Movies/Random
+    public ActionResult Random()
+    {
+        var movie = new Movie() { Name = "Shrek!" };
+        return View(movie);
+    }
+```
+* In *Views/Movies* add the *Random* view. It uses the *Shared/_Layout.cshtml*. Add the model defining directive and render the movie's *Name* property.
+```
+@model Vidly.Models.Movie
+
+@{
+    ViewBag.Title = "Random";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Name</h2>
 ```
