@@ -51,3 +51,12 @@ bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap-lumen.css",
                       "~/Content/site.css"));
 ```                      
+
+&nbsp;
+## 04 Add a partial view for the NavBar
+* In *Shared* add the *_NavBar* partial view.
+* Cut the NavBar code from *_Layout.cshtml* and paste    it into *_Navbar.cshtml*.
+* In place of the cut code in *_Layout.cshtml* add a call to the *Html.Partial* method.
+```
+@Html.Partial("_NavBar")
+```
