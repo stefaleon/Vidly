@@ -101,3 +101,26 @@ bundles.Add(new StyleBundle("~/Content/css").Include(
         };
     }
 ```
+
+&nbsp;
+## 07 Add the *Movies/Index* view
+* In *Views/Movies* add the *Index* view, using the *~/Views/Shared/_Layout.cshtml* layout.
+* Configure the view so that it displays the *Name* property of each movie in the *IEnumerable<Vidly.Models.Movie>* model.
+```
+<h2>Movies</h2>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Movie</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movie in Model)
+        {
+            <tr>
+                <td>@movie.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+```
