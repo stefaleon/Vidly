@@ -79,3 +79,25 @@ bundles.Add(new StyleBundle("~/Content/css").Include(
 <li>@Html.ActionLink("Customers", "Index", "Customers")</li>                
 <li>@Html.ActionLink("Movies", "Index", "Movies")</li>
 ```
+
+
+&nbsp;
+## 06 Edit *MoviesController*, add *Index* and *Getmovies*
+* Edit *MoviesController* and add the *Index* class, which is calling the *GetMovies* private method. *GetMovies* is defined as an *IEnumerable<Movie>* interface that returns a list of available movies.
+```
+    public ViewResult Index()
+    {
+        var movies = GetMovies();
+
+        return View(movies);
+    }
+
+    private IEnumerable<Movie> GetMovies()
+    {
+        return new List<Movie>
+        {
+            new Movie { Id = 1, Name = "Shrek" },
+            new Movie { Id = 2, Name = "Wall-e" }
+        };
+    }
+```
