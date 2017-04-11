@@ -156,3 +156,33 @@ public class CustomersController : Controller
         }
     }
 ```
+
+&nbsp;
+## 09 Add the *Customers/Index* view
+* In *Views/Customers* add the *Index* view, using the *~/Views/Shared/_Layout.cshtml* layout.
+* Configure the view so that it displays the *Name* property of each customer in the `IEnumerable<Vidly.Models.Customer>` model. If there are not customers an appropriate message is returned.
+```
+<h2>Customers</h2>
+@if (!Model.Any())
+{
+    <p>There are no customers yet.</p>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Customer</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in Model)
+            {
+                <tr>
+                    <td>@customer.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+```
