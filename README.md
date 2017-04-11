@@ -83,7 +83,7 @@ bundles.Add(new StyleBundle("~/Content/css").Include(
 
 &nbsp;
 ## 06 Edit *MoviesController*, add *Index* and *Getmovies*
-* Edit *MoviesController* and add the *Index* class, which is calling the *GetMovies* private method. *GetMovies* is defined as an *IEnumerable<Movie>* interface that returns a list of available movies.
+* Edit *MoviesController* and add the *Index* class, which is calling the *GetMovies* private method.  *Index* returns a *ViewResult* action result, which gets the return of *GetMovies* as an input parameter. *GetMovies* is defined as an `IEnumerable<Movie>` interface that returns a list of available movies.
 ```
     public ViewResult Index()
     {
@@ -105,7 +105,7 @@ bundles.Add(new StyleBundle("~/Content/css").Include(
 &nbsp;
 ## 07 Add the *Movies/Index* view
 * In *Views/Movies* add the *Index* view, using the *~/Views/Shared/_Layout.cshtml* layout.
-* Configure the view so that it displays the *Name* property of each movie in the *IEnumerable<Vidly.Models.Movie>* model.
+* Configure the view so that it displays the *Name* property of each movie in the `IEnumerable<Vidly.Models.Movie>` model.
 ```
 <h2>Movies</h2>
 <table class="table table-bordered table-hover">
@@ -123,4 +123,36 @@ bundles.Add(new StyleBundle("~/Content/css").Include(
         }
     </tbody>
 </table>
+```
+
+&nbsp;
+## 08 Add the *Customer* class and controller
+* In *Models*, add the *Customer* class and give it an *Id* and a *Name* properties.
+```
+public class Customer
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+```
+* In *Controllers*, add the *CustomersController* controller. It contains the *Index* class, which is calling the *GetCustomers* private method.  *Index* returns a *ViewResult* action result, which gets the return of *GetCustomers* as an input parameter. *GetCustomers* is defined as an `IEnumerable<Customer>` interface that returns a list of available customers.
+```
+public class CustomersController : Controller
+    {
+        public ViewResult Index()
+        {
+            var customers = GetCustomers();
+
+            return View(customers);
+        }
+
+        private IEnumerable<Customer> GetCustomers()
+        {
+            return new List<Customer>
+            {
+                new Customer { Id = 1, Name = "John Smith" },
+                new Customer { Id = 2, Name = "Mary Williams" }
+            };
+        }
+    }
 ```
