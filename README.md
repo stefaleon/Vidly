@@ -55,8 +55,27 @@ bundles.Add(new StyleBundle("~/Content/css").Include(
 &nbsp;
 ## 04 Add a partial view for the NavBar
 * In *Shared* add the *_NavBar* partial view.
-* Cut the NavBar code from *_Layout.cshtml* and paste    it into *_Navbar.cshtml*.
+* Cut the NavBar code from *_Layout.cshtml* and paste it into *_Navbar.cshtml*.
 * In place of the cut code in *_Layout.cshtml* add a call to the *Html.Partial* method.
 ```
 @Html.Partial("_NavBar")
+```
+
+
+&nbsp;
+## 05 Edit app name and nav links
+* Change the app name to *Vidly* in the footer section of *_Layout.cshtml*.
+```
+<footer>
+    <p>&copy; @DateTime.Now.Year - Vidly</p>
+</footer>
+```
+* Change the app name to *Vidly* inside *_Navbar.cshtml*.
+```
+@Html.ActionLink("Vidly", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+```
+* In *_Navbar.cshtml* remove the existing links and add links for *Customers* and *Movies*.
+```
+<li>@Html.ActionLink("Customers", "Index", "Customers")</li>                
+<li>@Html.ActionLink("Movies", "Index", "Movies")</li>
 ```
