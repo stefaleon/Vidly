@@ -186,3 +186,33 @@ else
     </table>
 }
 ```
+
+&nbsp;
+## 10 Add *Details* for customers
+* In the *CustomersController*, add the *Details* method. It returns an *ActionResult* which provides a view of a single customer, whose Id matches the method's input parameter.
+```
+public ActionResult Details(int id)
+        {
+            var customer = GetCustomers().SingleOrDefault(c => c.Id == id);
+
+            if (customer == null)
+                return HttpNotFound();
+
+            return View(customer);
+}
+```
+* In *Views/Customers/Index* replace the code that displays each customer's *Name* with an *ActionLink* which displays the *customer.Name*, invokes the *Details* method from the *Customers* controller and assigns the *customer.Id* on the method's *id* argument.
+```
+<td>@Html.ActionLink(customer.Name, "Details", "Customers", new { id = customer.Id }, null)</td>
+```
+* In *Views/Customers* add the *Details* view, using the *~/Views/Shared/_Layout.cshtml* layout. Set the model to *Vidly.Models.Customer*, the title to the *Model.Name* and display the *Model.Name*.
+```
+@model Vidly.Models.Customer
+
+@{
+    ViewBag.Title = Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Name</h2>
+```
