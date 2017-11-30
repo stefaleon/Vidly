@@ -30,6 +30,16 @@ namespace Vidly.Controllers
         {
             var movie = new Movie() { Name = "Shrek!" };
             return View(movie);
-        } 
+        }
+
+        public ActionResult Details(int id)
+        {
+            var movie = GetMovies().SingleOrDefault(m => m.Id == id);
+
+            if (movie == null)
+                return HttpNotFound();
+
+            return View(movie);
+        }
     }
 }
