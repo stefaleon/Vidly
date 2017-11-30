@@ -380,3 +380,43 @@ PM> add-migration AddMembershipType
 ```
 PM> update-database
 ```
+
+
+&nbsp;
+## 16 Populate MembershipTypes with a migration
+
+* Create an empty migration.
+
+```
+PM> add-migration PopulateMembershipTypes
+```
+```
+public partial class PopulateMembershipTypes : DbMigration
+    {
+        public override void Up()
+        {
+        }
+
+        public override void Down()
+        {
+        }
+    }
+```
+
+* Then call the *Sql* method and type in SQL statements.
+
+```
+public override void Up()
+{
+    Sql("INSERT INTO MembershipTypes (Id, SignUpFee, DurationInMonths, DiscountRate) VALUES (1, 0, 0, 0)");
+    Sql("INSERT INTO MembershipTypes (Id, SignUpFee, DurationInMonths, DiscountRate) VALUES (2, 30, 1, 10)");
+    Sql("INSERT INTO MembershipTypes (Id, SignUpFee, DurationInMonths, DiscountRate) VALUES (3, 90, 3, 15)");
+    Sql("INSERT INTO MembershipTypes (Id, SignUpFee, DurationInMonths, DiscountRate) VALUES (4, 300, 12, 20)");
+}
+```
+
+* By updating, we can seed the MembershipTypes data to the database.
+
+```
+PM> update-database
+```
