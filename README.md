@@ -344,3 +344,39 @@ PM> add-migration AddIsSubscribedToNewsLetterToCustomer
 ```
 PM> update-database
 ```
+
+
+&nbsp;
+## 15 Add the MembershipType model
+
+* Add the MembershipType class in the models folder.
+
+```
+    public class MembershipType
+    {
+        public byte Id { get; set; }
+        public short SignUpFee { get; set; }
+        public byte DurationInMonths { get; set; }
+        public byte DiscountRate { get; set; }
+    }
+```
+
+* MembershipType has to be associated with the Customer class. Add the MembershipType navigational property to the Customer class as well as the MembershipTypeId property which is recognized by convention by the Entity framework as a foreign key.
+
+```
+    public class Customer
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool IsSubscribedToNewsletter { get; set; }
+        public MembershipType MembershipType { get; set; }
+        public byte MembershipTypeId { get; set; }
+    }
+```
+
+```
+PM> add-migration AddMembershipType
+```
+```
+PM> update-database
+```
