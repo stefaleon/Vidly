@@ -292,3 +292,21 @@ public ActionResult Details(int id)
 <p>Id: @Model.Id</p>
 <p>Name: @Model.Name</p>
 ```
+
+
+## 12 Enable migrations
+
+```
+PM> enable-migrations
+```
+
+```
+PM> add-migration InitialModel
+```
+
+```
+PM> update-database
+```
+
+* In the created migration we can see calls to the CreateTable method for tables referring to users and roles, coming from the ASP.NET Identity framework.
+Inside IdentityModels.cs, the ApplicationDbContext class inherits from IdentityDbContext. Entity framework located the auto generated Identity DbSets while creating the migration. No references to our domain classes (Movie, Customer) are found.
