@@ -310,3 +310,20 @@ PM> update-database
 
 * In the created migration we can see calls to the CreateTable method for tables referring to users and roles, coming from the ASP.NET Identity framework.
 Inside IdentityModels.cs, the ApplicationDbContext class inherits from IdentityDbContext. Entity framework located the auto generated Identity DbSets while creating the migration. No references to our domain classes (Movie, Customer) are found.
+
+
+&nbsp;
+## 13 Add the DbSet for *Customers*
+
+* Inside IdentityModels.cs, in ApplicationDbContext, add the DbSet for *Customers*.
+
+```
+public DbSet<Customer> Customers { get; set; }
+```
+
+```
+PM> Add-migration AddCustomersTable
+```
+```
+PM> update-database
+```
