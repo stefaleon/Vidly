@@ -327,3 +327,20 @@ PM> Add-migration AddCustomersTable
 ```
 PM> update-database
 ```
+
+
+&nbsp;
+## 14 Add a property to Customer
+
+* Add the IsSubscribedToNewsletter property to the Customer model.
+
+```
+public bool IsSubscribedToNewsletter { get; set; }
+```
+
+```
+PM> add-migration AddIsSubscribedToNewsLetterToCustomer
+```
+```
+PM> update-database
+```
