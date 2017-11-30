@@ -420,3 +420,33 @@ public override void Up()
 ```
 PM> update-database
 ```
+
+
+&nbsp;
+## 17 Override conventions with data annotations
+
+* In the Customer model, apply attributes with DataAnnotations in order to make Name not nullable and set its string length to 255.
+
+```
+using System.ComponentModel.DataAnnotations;
+```
+
+```
+    public class Customer
+    {
+        public int Id { get; set; }
+        [Required]
+        [StringLength(255)]
+        public string Name { get; set; }
+        public bool IsSubscribedToNewsletter { get; set; }
+        public MembershipType MembershipType { get; set; }
+        public byte MembershipTypeId { get; set; }
+    }
+```
+
+```
+PM> add-migration ApplyAnnotationsToCustomerName
+```
+```
+PM> update-database
+```
