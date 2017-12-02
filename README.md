@@ -496,7 +496,7 @@ PM> update-database
 ```
 
 
-* In the *Details* action, we must also replace the *GetCustomers* method and get the customers from the database by use of the dbContext.
+* In the *Details* action, we must also replace the *GetCustomers* method and get the selected customer from the database by use of the dbContext.
 
 ```
     public ActionResult Details(int id)
@@ -817,4 +817,81 @@ PM> add-migration UpdateTheMovieModel
 ```
 ```
 PM> update-database
+```
+
+
+&nbsp;
+## 25 Get movies from the database
+
+* Modify the controller and the views for the movies in order to update the way the movies list and the movie details are presented.
+
+* In MoviesController.cs, declare a dbContext in order to access the database. Add a constructor (ctor +Tab) and initialize the dbContext inside it. Override the dispose method of the base controller class and call Dispose() on the dbContext.
+
+```
+    private ApplicationDbContext _context;
+
+    public MoviesController()
+    {
+        _context = new ApplicationDbContext();
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        _context.Dispose();
+    }
+```
+
+* In the *Index* action, instead of calling the *GetMovies* method, initialize the *movies* variable using the dbContext's DbSet *Movies*. Force immediate execution of the query by calling the *ToList* method. Use the *Include* method in order to enable Eager Loading for the Movies and their Genres.
+
+```
+using System.Data.Entity;
+```
+```
+    public ViewResult Index()
+    {
+        var movies = _context.Movies.Include(m => m.Genre).ToList();
+
+        return View(movies);
+    }
+```
+
+
+* In the *Details* action, we must also replace the *GetMovies* method and get the selected movie from the database by use of the dbContext. Eager loading has to be applied here with *Include* as well.
+
+```
+var movie = _context.Movies.Include(m => m.Genre).SingleOrDefault(m => m.Id == id);
+
+```
+
+* Now the movies index and detail pages are loading the data from the database. Add demo data for movies to the database manually.
+
+* Edit the views in order to display the genre in the list of movies and the additional fields in the movie details.
+
+*Views/Movies/Index.cshtml*
+```
+<thead>
+    <tr>
+        <th>Movie</th>
+        <th>Genre</th>
+    </tr>
+</thead>
+<tbody>
+    @foreach (var movie in Model)
+    {
+        <tr>
+            <td>@Html.ActionLink(movie.Name, "Details", "Movies", new { id = movie.Id }, null)</td>
+            <td>@movie.Genre.Name</td>
+        </tr>
+    }
+</tbody>
+```
+
+*Views/Movies/Details.cshtml*
+```
+<ul>
+    <li>Genre: @Model.Genre.Name</li>
+    <li>Release Date: @Model.ReleaseDate.ToLongDateString()</li>
+    <li>Date Added: @Model.DateAdded.ToLongDateString()</li>
+    <li>Number in Stock: @Model.NumberInStock</li>
+</ul>
 ```

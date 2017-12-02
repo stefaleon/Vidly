@@ -9,3 +9,9 @@
 <h3>Details for movie <b>@Model.Name</b></h3>
 <p>Id: @Model.Id</p>
 <p>Name: @Model.Name</p>
+<ul>
+    <li>Genre: @Model.Genre.Name</li>
+    <li>Release Date: @Model.ReleaseDate.ToLongDateString()</li>
+    <li>Date Added: @Model.DateAdded.ToLongDateString()</li>
+    <li>Number in Stock: @Model.NumberInStock</li>
+</ul>
