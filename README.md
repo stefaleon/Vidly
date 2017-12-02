@@ -525,7 +525,7 @@ There are no customers yet.
 
 
 &nbsp;
-## 19 Eager load the customers discount rate
+## 19 Eager load customer membership type
 
 * Edit the *Views/Customers/Index.cshtml* in order to display the customers' discount rate, which is described in the MembershipType DbSet.
 
@@ -565,4 +565,79 @@ using System.Data.Entity;
 
         return View(customers);
     }
+```
+
+
+&nbsp;
+## 20 Apply names to MembershipTypes
+
+* Edit the MembershipType model. Add the Name property. Make it non nullable.
+
+```
+using System.ComponentModel.DataAnnotations;
+```
+
+```
+    public class MembershipType
+    {
+        public byte Id { get; set; }
+        [Required]
+        public string Name { get; set; }
+        public short SignUpFee { get; set; }
+        public byte DurationInMonths { get; set; }
+        public byte DiscountRate { get; set; }
+    }
+```
+
+* Apply the migration.
+```
+PM> add-migration AddNameToMembershipType
+```
+```
+PM> update-database
+```
+
+* Apply another migration in order to update the database entries with the appropriate names.
+
+```
+PM> add-migration SetNamesOfMembershipTypes
+```
+
+* In the empty migration, use the Sql command on order to apply SQL update commands and set the names.
+
+```
+public override void Up()
+{
+    Sql("UPDATE MembershipTypes SET Name = 'Pay as You Go' WHERE Id = 1");
+    Sql("UPDATE MembershipTypes SET Name = 'Monthly' WHERE Id = 2");
+    Sql("UPDATE MembershipTypes SET Name = 'Quarterly' WHERE Id = 3");
+    Sql("UPDATE MembershipTypes SET Name = 'Annual' WHERE Id = 4");
+}
+```
+```
+PM> update-database
+```
+
+* Edit the Views/Customers/Index.cshtml in order to display the customers' membership type name.
+
+```
+<table class="table table-bordered table-hover">
+  <thead>
+      <tr>
+          <th>Customer</th>
+          <th>Membership Type</th>
+          <th>Discount Rate</th>
+      </tr>
+  </thead>
+  <tbody>
+      @foreach (var customer in Model)
+      {
+          <tr>
+              <td>@Html.ActionLink(customer.Name, "Details", "Customers", new { id = customer.Id }, null)</td>
+              <td>@customer.MembershipType.Name</td>
+              <td>@customer.MembershipType.DiscountRate%</td>
+          </tr>
+      }
+  </tbody>
+</table>
 ```
