@@ -700,3 +700,20 @@ public ActionResult Details(int id)
     }
 </ul>
 ```
+
+&nbsp;
+## 22 Add the movies table in the database
+
+* Inside IdentityModels.cs, in ApplicationDbContext, add the DbSet for *Movies*.
+
+```
+    public DbSet<Movie> Movies { get; set; }
+```
+
+```
+PM> add-migration AddMoviesTable
+```
+
+```
+PM> update-database
+```
