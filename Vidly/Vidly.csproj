@@ -237,9 +237,18 @@
     <Compile Include="Migrations\201712022255454_AddMoviesTable.Designer.cs">
       <DependentUpon>201712022255454_AddMoviesTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712022303034_AddGenresTable.cs" />
+    <Compile Include="Migrations\201712022303034_AddGenresTable.Designer.cs">
+      <DependentUpon>201712022303034_AddGenresTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712022304569_PopulateGenreTypes.cs" />
+    <Compile Include="Migrations\201712022304569_PopulateGenreTypes.Designer.cs">
+      <DependentUpon>201712022304569_PopulateGenreTypes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\Genre.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MembershipType.cs" />
@@ -360,6 +369,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712022255454_AddMoviesTable.resx">
       <DependentUpon>201712022255454_AddMoviesTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712022303034_AddGenresTable.resx">
+      <DependentUpon>201712022303034_AddGenresTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712022304569_PopulateGenreTypes.resx">
+      <DependentUpon>201712022304569_PopulateGenreTypes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

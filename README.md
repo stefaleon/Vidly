@@ -717,3 +717,66 @@ PM> add-migration AddMoviesTable
 ```
 PM> update-database
 ```
+
+
+&nbsp;
+## 23 Add genres
+
+* In models, add the *Genre* class.
+
+```
+using System.ComponentModel.DataAnnotations;
+```
+```
+    public class Genre
+    {
+        public byte Id { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string Name { get; set; }
+    }
+```
+
+* Inside IdentityModels.cs, in ApplicationDbContext, add the DbSet for *Genres*.
+
+```
+    public DbSet<Genre> Genres { get; set; }
+```
+
+```
+PM> add-migration AddGenresTable
+```
+
+```
+PM> update-database
+```
+
+
+* Genre contains reference data, so we will populate the database with a migration.
+
+```
+PM> add-migration PopulateGenreTypes
+```
+
+* Before updating the database, create SQL insert statements for the genre types by use of the Sql method in the empty migration.
+
+```
+public partial class PopulateGenreTypes : DbMigration
+{
+    public override void Up()
+    {
+        Sql("INSERT INTO Genres (Id, Name) VALUES (1, 'Action')");
+        Sql("INSERT INTO Genres (Id, Name) VALUES (2, 'Romance')");
+        Sql("INSERT INTO Genres (Id, Name) VALUES (3, 'Thriller')");
+        Sql("INSERT INTO Genres (Id, Name) VALUES (4, 'Comedy')");
+        Sql("INSERT INTO Genres (Id, Name) VALUES (5, 'Crime')");
+        Sql("INSERT INTO Genres (Id, Name) VALUES (6, 'Horror')");
+        Sql("INSERT INTO Genres (Id, Name) VALUES (7, 'Western')");
+    }
+}
+```
+
+```
+PM> update-database
+```
