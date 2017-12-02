@@ -641,3 +641,62 @@ PM> update-database
   </tbody>
 </table>
 ```
+
+
+&nbsp;
+## 21 Add Birthdate to customer data
+
+* Edit the Customer model. Add the nullable Birthdate property.
+
+```
+public DateTime? Birthdate { get; set; }
+```
+
+
+* Apply the migration.
+
+```
+PM> add-migration AddBirthdateToCustomer
+```
+```
+PM> update-database
+```
+
+* Edit manually the birthdates of some customers in the database.
+
+* Use the *Include* method in the Details action in CustomersController.cs in order to enable Eager Loading for the Customers and their MembershipTypes.
+
+```
+using System.Data.Entity;
+```
+```
+public ActionResult Details(int id)
+{
+    var customer = _context.Customers.Include(c => c.MembershipType).SingleOrDefault(c => c.Id == id);
+
+    if (customer == null)
+        return HttpNotFound();
+
+    return View(customer);
+}
+```
+
+* Update the Views/Customers/Details.cshtml in order to display the customer's membership type and the birthdate whenever it is available.
+
+```
+@model Vidly.Models.Customer
+
+@{
+    ViewBag.Title = Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Name</h2>
+<ul>
+    <li>Membership Type: @Model.MembershipType.Name</li>
+    @if (Model.Birthdate.HasValue)
+    {
+        <li>Birthdate: @Model.Birthdate.Value.ToShortDateString()</li>
+    }
+</ul>
+```
