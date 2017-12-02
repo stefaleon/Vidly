@@ -780,3 +780,41 @@ public partial class PopulateGenreTypes : DbMigration
 ```
 PM> update-database
 ```
+
+
+&nbsp;
+## 24 Update the Movie model
+
+* Edit the Movie model. Add properties for date added, release date, number of copies in stock. Genre has to be associated with the Movies class. Add the Genre navigational property to the Movie class. Also add the GenreId property which is recognized by convention by the Entity framework as a foreign key.
+
+```
+using System.ComponentModel.DataAnnotations;
+```
+
+```
+    public class Movie
+    {
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        public string Name { get; set; }
+
+        public DateTime DateAdded { get; set; }
+
+        public DateTime ReleaseDate { get; set; }
+
+        public byte NumberInStock { get; set; }
+
+        [Required]
+        public Genre Genre { get; set; }
+        public byte GenreId { get; set; }
+    }
+```
+
+```
+PM> add-migration UpdateTheMovieModel
+```
+```
+PM> update-database
+```
