@@ -521,3 +521,48 @@ There are no customers yet.
 * Add some customer data manually since these are not reference data (unlike the MembershipType data we seeded previously).
 
 * Now the customer index and detail pages can load customer data from the database. The movie index and detail still receive data created with the GetMovies helper seed method.
+
+
+
+&nbsp;
+## 19 Eager load the customers discount rate
+
+* Edit the *Views/Customers/Index.cshtml* in order to display the customers' discount rate, which is described in the MembershipType DbSet.
+
+```
+<table class="table table-bordered table-hover">
+  <thead>
+      <tr>
+          <th>Customer</th>
+          <th>Discount Rate</th>
+      </tr>
+  </thead>
+  <tbody>
+      @foreach (var customer in Model)
+      {
+          <tr>
+              <td>@Html.ActionLink(customer.Name, "Details", "Customers", new { id = customer.Id }, null)</td>
+              <td>@customer.MembershipType.DiscountRate%</td>
+          </tr>
+      }
+  </tbody>
+</table>
+```
+
+
+* If we attempt to run this page we will get a null reference exception error because the MembershipType object is null. By default Entity framework loads only the declared objects and not their related objects.
+
+* Use the *Include* method in the Index action in CustomersController.cs in order to enable Eager Loading for the Customers and their MembershipTypes.
+
+```
+using System.Data.Entity;
+```
+
+```
+    public ViewResult Index()
+    {
+        var customers = _context.Customers.Include(c => c.MembershipType).ToList();
+
+        return View(customers);
+    }
+```
