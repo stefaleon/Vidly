@@ -450,3 +450,74 @@ PM> add-migration ApplyAnnotationsToCustomerName
 ```
 PM> update-database
 ```
+
+
+&nbsp;
+## 18 Get customers from a database
+
+
+* In Web.config, edit the connection string in order to point to the database of our choice.
+
+```
+<connectionStrings>    
+  <add name="DefaultConnection"
+    connectionString="Data Source=(LocalDb)\MSSQLLocalDB;Initial Catalog=Vidly20171202;Integrated Security=SSPI"
+    providerName="System.Data.SqlClient" />
+</connectionStrings>
+```
+
+
+* In CustomersController.cs, declare a dbContext in order to access the database. Add a constructor (ctor +Tab) and initialize the dbContext inside it. Override the dispose method of the base controller class and call Dispose() on the dbContext.
+
+```
+    private ApplicationDbContext _context;
+
+    public CustomersController()
+    {
+        _context = new ApplicationDbContext();
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        _context.Dispose();
+    }
+```
+
+
+* Instead of calling the *GetCustomers* method, initialize the *customers* variable using the dbContext's DbSet *Customers*. Force immediate execution of the query by calling the *ToList* method.
+
+```
+    public ViewResult Index()
+    {
+        var customers = _context.Customers.ToList();
+
+        return View(customers);
+    }
+```
+
+
+* In the *Details* action, we must also replace the *GetCustomers* method and get the customers from the database by use of the dbContext.
+
+```
+    public ActionResult Details(int id)
+    {
+        var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
+
+        if (customer == null)
+            return HttpNotFound();
+
+        return View(customer);
+    }
+```
+
+
+* Run the project. The database declared in Web.config (Vidly20171202) will be created. If we browse the Customers tab, we see that there are no customers in the database, as dictated by the *@if (!Model.Any())* condition in the Views/Customers/Index.cshtml view.
+
+```
+There are no customers yet.
+```
+
+
+* Add some customer data manually since these are not reference data (unlike the MembershipType data we seeded previously).
+
+* Now the customer index and detail pages can load customer data from the database. The movie index and detail still receive data created with the GetMovies helper seed method.
