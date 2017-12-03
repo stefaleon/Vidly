@@ -895,3 +895,60 @@ var movie = _context.Movies.Include(m => m.Genre).SingleOrDefault(m => m.Id == i
     <li>Number in Stock: @Model.NumberInStock</li>
 </ul>
 ```
+
+
+&nbsp;
+## 26 Create the New Customer form
+
+* In CustomerController.cs, create the New() action.
+
+```
+    public ActionResult New()
+    {
+        return View();
+    }
+```
+
+* Create the related view.
+  * Use the *BeginForm* *Html* helper method which takes the *Create* action and the *Customers* controller parameters. Wrap it in a using statement in order to create the closing *</Form>* tag.
+  * Use bootstrap markup inside.
+  * Use the *LabelFor* *Html* method with a lambda expression for the model name.
+  * Use the *TextBoxFor* *Html* method with a lambda expression for the model name and an anonymous object for assigning the *form-control* bootstrap class.
+  * Add another label and textbox for the customer birthdate. Apply a *Display* data annotation to the Birthdate property in the customer model in order to display the label as "Date of Birth".
+  * Add another label and a checkbox for the customer *IsSubscribedToNewsletter* property. *LabelFor* will not be used in this case. The bootstrap *checkbox* class will be assigned to the wrapping div element.
+
+*Views/Customers/New.cshtml*
+```
+@model Vidly.Models.Customer
+
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>New Customer</h2>
+
+@using (Html.BeginForm("Create", "Customers"))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Birthdate)
+        @Html.TextBoxFor(m => m.Birthdate, new { @class = "form-control" })
+    </div>
+    <div class="checkbox">
+        <label>
+            @Html.CheckBoxFor(m => m.IsSubscribedToNewsletter)
+            Subscribed to Newsletter
+        </label>        
+    </div>
+}
+```
+
+*Models/Customer.cs*
+```
+    [Display(Name="Date of Birth")]
+    public DateTime? Birthdate { get; set; }
+```    
