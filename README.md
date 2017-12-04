@@ -1182,3 +1182,42 @@ using Vidly.ViewModels;
       <button type="submit" class="btn btn-primary">Save</button>
   }
   ```
+
+
+
+  &nbsp;
+  ## 30 Edit customers
+
+  * In *Views/Customers/Index.cshtml* replace the *Details* action in the customer ActionLink with *Edit*. Now, clicking on a customers' name will navigate to the *CustomerForm* view instead of the *Details* view.
+
+  ```
+  <td>@Html.ActionLink(customer.Name, "Edit", "Customers", new { id = customer.Id }, null)</td>
+  ```
+
+
+  * In CustomerController.cs, create the *Edit* action.
+
+    * Select a customer by Id by use of the *SingleOrDefault* method.
+
+    * Define the viewModel and initialize Customer and MembershipTypes.
+
+    * In the return, specify the view name ("CustomerForm").
+
+    ```
+        public ActionResult Edit(int id)
+        {
+            var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
+            var membershipTypes = _context.MembershipTypes.ToList();
+
+            if (customer == null)
+                return HttpNotFound();
+
+            var viewModel = new CustomerFormViewModel
+            {
+                Customer = customer,
+                MembershipTypes = membershipTypes
+            };
+
+            return View("CustomerForm", viewModel);
+        }
+    ```
