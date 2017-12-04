@@ -952,3 +952,95 @@ var movie = _context.Movies.Include(m => m.Genre).SingleOrDefault(m => m.Id == i
     [Display(Name="Date of Birth")]
     public DateTime? Birthdate { get; set; }
 ```    
+
+
+&nbsp;
+## 27 Select membership type from a dropdown list
+
+* Inside IdentityModels.cs, in ApplicationDbContext, add the DbSet for *MembershipTypes*.
+
+```
+    public DbSet<MembershipType> MembershipTypes { get; set; }
+```
+
+* We will need a view model that contains membership types and properties of the customer domain object. Add the *ViewModels* folder and create the *NewCustomerViewModel*. Get a list of membership types by use of an IEnumerable. Add the Customer object (the scale of the project is such that there is no necessity to add properties individually) in order to access its required by the view properties.
+
+```
+using Vidly.Models;
+```
+```
+namespace Vidly.ViewModels
+{
+    public class NewCustomerViewModel
+    {
+        public IEnumerable<MembershipType> MembershipTypes { get; set; }
+
+        public Customer Customer { get; set; }
+    }
+}
+```
+
+* In CustomerController.cs, edit the New() action.  
+
+```
+using Vidly.ViewModels;
+```
+```
+    public ActionResult New()
+    {
+       var membershipTypes = _context.MembershipTypes.ToList();
+
+       var viewModel = new NewCustomerViewModel
+       {
+           MembershipTypes = membershipTypes
+       };
+
+       return View(viewModel);
+    }
+```
+
+* In the view, update the model used and prefix the customer properties in the lambda expressions with *Customer*. Then add a div with the code for the membership type dropdown list by use of *DropDownListFor* *Html* method.
+
+*Views/Customers/New.cshtml*
+```
+@model Vidly.ViewModels.NewCustomerViewModel
+
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>New Customer</h2>
+
+@using (Html.BeginForm("Create", "Customers"))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Customer.Name)
+        @Html.TextBoxFor(m => m.Customer.Name, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Customer.Birthdate)
+        @Html.TextBoxFor(m => m.Customer.Birthdate, new { @class = "form-control" })
+    </div>
+    <div class="checkbox">
+        <label>
+            @Html.CheckBoxFor(m => m.Customer.IsSubscribedToNewsletter)
+            Subscribed to Newsletter
+        </label>        
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Customer.MembershipTypeId)
+        @Html.DropDownListFor(m => m.Customer..MembershipTypeId,
+                new SelectList(Model.MembershipTypes, "Id", "Name"),
+                "Select Membership Type", new { @class = "form-control" } )
+    </div>
+}
+```
+
+* Apply a *Display* data annotation to the MembershipTypeId property in the customer model in order to display the label as "Membership Type".
+
+*Models/Customer.cs*
+```
+    [Display(Name = "Membership Type")]
+    public byte MembershipTypeId { get; set; }
+```
