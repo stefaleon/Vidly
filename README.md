@@ -1044,3 +1044,14 @@ using Vidly.ViewModels;
     [Display(Name = "Membership Type")]
     public byte MembershipTypeId { get; set; }
 ```
+
+
+
+&nbsp;
+## 28 Add the *Save* button
+
+* Add a button to the view. Set the type to *submit* and add bootstrap classes.
+
+```
+    <button type="submit" class="btn btn-primary">Save</button>
+```
