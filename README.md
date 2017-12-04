@@ -1048,10 +1048,51 @@ using Vidly.ViewModels;
 
 
 &nbsp;
-## 28 Add the *Save* button
+## 28 Add the *Save* button and action
 
 * Add a button to the view. Set the type to *submit* and add bootstrap classes.
 
 ```
     <button type="submit" class="btn btn-primary">Save</button>
 ```
+
+
+* In CustomerController.cs, add the Save() action.  
+
+  * Apply the *HttpPost* attribute to make sure that the action is called only with the POST HTTP request method.
+
+  * **Model binding**: Add a parameter of *Customer* type. MVC framework binds the customer model to the request data.
+
+  * Check whether the customer is a new or an existing one.
+
+  * **Add to context**: If Customer.Id is zero, then create a new customer. Add the customer that we will create to the dbContext by use of the *Add* method.
+
+  * If Customer.Id is not zero, we have an existing customer. We get the customer from the database and update the data by setting the properties of the Customer object.
+
+  * **Persist changes**: Add, modify or delete changes are persisted by use of the *SaveChanges* method on the context.
+
+  * Redirect the user to the list of customers by returning a *RedirectToAction* method.
+
+  ```
+      [HttpPost]
+      public ActionResult Save(Customer customer)
+      {
+          if (customer.Id == 0)
+              _context.Customers.Add(customer);
+          else
+          {
+              var customerInDb = _context.Customers.Single(c => c.Id == customer.Id);
+
+              customerInDb.Name = customer.Name;
+              customerInDb.Birthdate = customer.Birthdate;
+              customerInDb.MembershipTypeId = customer.MembershipTypeId;
+              customerInDb.IsSubscribedToNewsletter = customer.IsSubscribedToNewsletter;
+          }
+
+          _context.SaveChanges();
+
+          return RedirectToAction("Index", "Customers");
+      }
+  ```
+
+* The customer Id must be provided in the form.
