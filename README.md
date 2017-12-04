@@ -1096,3 +1096,89 @@ using Vidly.ViewModels;
   ```
 
 * The customer Id must be provided in the form.
+
+
+
+&nbsp;
+## 29 Refactor
+
+* The new customer form will be also used for updating existing customers' data. Refactoring is required in order to adjust to the newly introduced functionality.
+
+  * Rename the view model from *NewCustomerViewModel* to *CustomerFormViewModel*.
+
+  * Rename the *Views/Cuatomers/New.cshtml* view to *CustomerForm.cshtml*.
+
+  * Edit the *New* action in CustomersController.cs.
+
+    * In the viewModel a new Customer has to be initialized.
+
+    * In the return, specify the view name which is now "CustomerForm".
+
+  ```
+      public ActionResult New()
+      {
+          var membershipTypes = _context.MembershipTypes.ToList();
+
+          var viewModel = new CustomerFormViewModel
+          {
+              Customer = new Customer(),
+              MembershipTypes = membershipTypes
+          };
+
+          return View("CustomerForm", viewModel);
+      }
+  ```
+
+* Refactor *CustomerForm.cshtml*.
+
+  * Conditionally render "New Customer" or "Edit Customer".
+
+  * Rename the target action from *Create* to *Save*.
+
+  * Format the Birthdate string.
+
+  * Relocate the checkbox to above the Save button.
+
+  * **Provide the customer Id in the form as a hidden field by use of *HiddenFor*.**
+
+
+  ```
+  @model Vidly.ViewModels.CustomerFormViewModel
+
+  @{
+      ViewBag.Title = "CustomerForm";
+      Layout = "~/Views/Shared/_Layout.cshtml";
+  }
+
+  @if (@Model.Customer.Id == 0)
+  { <h2>New Customer</h2> }
+  else
+  { <h2>Edit Customer</h2> }
+
+
+  @using (Html.BeginForm("Save", "Customers"))
+  {
+      <div class="form-group">
+          @Html.LabelFor(m => m.Customer.Name)
+          @Html.TextBoxFor(m => m.Customer.Name, new { @class = "form-control" })
+      </div>
+      <div class="form-group">
+          @Html.LabelFor(m => m.Customer.Birthdate)
+          @Html.TextBoxFor(m => m.Customer.Birthdate, "{0:d MMMM yyyy}", new { @class = "form-control" })
+      </div>    
+      <div class="form-group">
+          @Html.LabelFor(m => m.Customer.MembershipTypeId)
+          @Html.DropDownListFor(m => m.Customer.MembershipTypeId,
+            new SelectList(Model.MembershipTypes, "Id", "Name"),
+             "Select Membership Type", new { @class = "form-control" } )
+      </div>
+      <div class="checkbox">
+          <label>
+              @Html.CheckBoxFor(m => m.Customer.IsSubscribedToNewsletter)
+              Subscribed to Newsletter
+          </label>
+      </div>
+      @Html.HiddenFor(m => m.Customer.Id)
+      <button type="submit" class="btn btn-primary">Save</button>
+  }
+  ```
