@@ -1567,3 +1567,66 @@ using Vidly.ViewModels;
         return RedirectToAction("Index", "Movies");
     }
 ```  
+
+
+&nbsp;
+## 39 Add Validation on customer save
+
+* In *CustomerController.cs*, in the Save action, add *ModelState* validation. On save button click, redirect to remain in the same form if the model state is not valid.
+
+```
+    if (!ModelState.IsValid)
+    {
+        var viewModel = new CustomerFormViewModel
+        {
+            Customer = customer,
+            MembershipTypes = _context.MembershipTypes.ToList()
+        };
+
+        return View("CustomerForm", viewModel);
+    }
+```
+
+* Add validation message placeholders in the *CustomerForm* view.
+
+```
+<div class="form-group">
+    @Html.LabelFor(m => m.Customer.Name)
+    @Html.TextBoxFor(m => m.Customer.Name, new { @class = "form-control" })
+    @Html.ValidationMessageFor(m => m.Customer.Name)
+</div>
+```
+```
+<div class="form-group">
+    @Html.LabelFor(m => m.Customer.MembershipTypeId)
+    @Html.DropDownListFor(m => m.Customer.MembershipTypeId,
+         new SelectList(Model.MembershipTypes, "Id", "Name"),
+          "Select Membership Type", new { @class = "form-control" })
+    @Html.ValidationMessageFor(m => m.Customer.MembershipTypeId)
+</div>
+```
+
+
+* In *Content/Site.css* style the *field-validation-error* class with red color.
+
+```
+.field-validation-error {
+    color: red;
+}
+```
+
+* Add a red border *for input-validation-error*.
+
+```
+.input-validation-error {
+    border: 2px solid red;
+}
+```
+
+* In the Customer model, override the message for the *Required* attribute in the data annotation.
+
+```
+[Required(ErrorMessage = "Please enter customer's name.")]
+[StringLength(255)]
+public string Name { get; set; }
+```
