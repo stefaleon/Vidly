@@ -1221,3 +1221,48 @@ using Vidly.ViewModels;
             return View("CustomerForm", viewModel);
         }
     ```
+
+
+&nbsp;
+## 31 Add the New Customer button
+
+* In *Views/Customers/Index.cshtml* add an ActionLink navigating to the New action. Style it as a button with bootstrap classes.
+
+```
+<p>
+  @Html.ActionLink("New Customer", "New", "Customers", null, new { @class = "btn btn-primary" })    
+</p>
+```
+
+&nbsp;
+## 32 Move the New/Edit customer logic to the ViewModel
+
+* In *CustomerForm.cshtml* there is a conditional for the title selection.
+
+```
+@if (@Model.Customer.Id == 0)
+{ <h2>New Customer</h2> }
+else
+{ <h2>Edit Customer</h2> }
+```
+
+It is better practice to keep logic apart from the views if possible. Add the Title property in *CustomerFormViewModel* and include the logic inside the definition.
+
+```
+    public string Title
+    {
+        get
+        {
+            if (Customer != null && Customer.Id != 0)
+                return "Edit Customer";
+
+            return "New Customer";
+        }
+    }
+```
+
+and replace the conditional in the customer form with the title.
+
+```
+<h2>@Model.Title</h2>
+```

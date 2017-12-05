@@ -5,10 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@if (@Model.Customer.Id == 0)
-{ <h2>New Customer</h2> }
-else
-{ <h2>Edit Customer</h2> }
+<h2>@Model.Title</h2>
 
 
 @using (Html.BeginForm("Save", "Customers"))
