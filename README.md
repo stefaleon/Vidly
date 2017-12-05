@@ -1348,3 +1348,68 @@ using Vidly.Models;
        }
    }
 ```
+
+
+&nbsp;
+## 35 Add the MovieForm view
+
+* In *Views/Movies* add the empty *MovieForm* view using the *~/Views/Shared/_Layout.cshtml*.
+
+  * Set the model to MovieFormViewModel.
+
+  * Display the *Model.Title*.
+
+  * Use the *BeginForm* *Html* helper method which takes the *Save* action and the *Movies* controller parameters. Wrap it in a using statement in order to create the closing *</Form>* tag.
+
+  * Use bootstrap markup with the *form-group* class.
+
+  * Use the *LabelFor* and *TextBoxFor* *Html* methods with lambda expressions for the movie name, for the properly formatted *Release* and *Added* dates and for the number in stock.
+
+  * Use the *LabelFor* and *DropDownListFor* *Html* methods for the genre, populated via GenreIds and displaying the genre names with the *SelectList* method.
+
+  * Use anonymous objects for assigning the *form-control* bootstrap class.
+
+  * The *Display* data annotations to the Movie properties in the model will be displayed in the labels.  
+
+  * **Provide the movie Id in the form as a hidden field by use of *HiddenFor*.**
+
+  * Add a button. Set the type to *submit* and add bootstrap classes.
+
+*Views/Movies/MovieForm.cshtml*
+```
+@model Vidly.ViewModels.MovieFormViewModel
+
+@{
+    ViewBag.Title = "MovieForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Title</h2>
+
+@using (Html.BeginForm("Save", "Movies"))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Movie.Name)
+        @Html.TextBoxFor(m => m.Movie.Name, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Movie.DateAdded)
+        @Html.TextBoxFor(m => m.Movie.DateAdded, "{0:d MMMM yyyy}", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Movie.ReleaseDate)
+        @Html.TextBoxFor(m => m.Movie.ReleaseDate, "{0:d MMMM yyyy}", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Movie.GenreId)
+        @Html.DropDownListFor(m => m.Movie.GenreId,
+          new SelectList(Model.Genres, "Id", "Name"), "", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Movie.NumberInStock)
+        @Html.TextBoxFor(m => m.Movie.NumberInStock, new { @class = "form-control" })
+    </div>
+    @Html.HiddenFor(m => m.Movie.Id)
+    <button type="submit" class="btn btn-primary">Save</button>
+}
+```
