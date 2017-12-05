@@ -1523,3 +1523,47 @@ using Vidly.ViewModels;
         return View("MovieForm", viewModel);
     }
 ```
+
+&nbsp;
+## 38 Save movie
+
+* In *MoviesController.cs*, add the Save() action.  
+
+  * Apply the *HttpPost* attribute to make sure that the action is called only with the POST HTTP request method.
+
+  * **Model binding**: Add a parameter of *Movie* type. MVC framework binds the movie model to the request data.
+
+  * Check whether the movie is a new or an existing one.
+
+  * **Add to context**: If Movie.Id is zero, then create a new movie. Add the movie that we will create to the dbContext by use of the *Add* method.
+
+  * If Movie.Id is not zero, we have an existing movie. We get the movie from the database and update the data by setting the properties of the Movie object.
+
+  * Notice that we will not be updating the *DateAdded* property. We will be able to persist the change of this value only when we add a new movie.
+
+  * **Persist changes**: Add, modify or delete changes are persisted by use of the *SaveChanges* method on the context.
+
+  * Redirect the user to the list of movies by returning a *RedirectToAction* method.
+
+```
+    [HttpPost]
+    public ActionResult Save(Movie movie)
+    {
+        if (movie.Id == 0)
+        {                
+            _context.Movies.Add(movie);
+        }
+        else
+        {
+            var movieInDb = _context.Movies.Single(m => m.Id == movie.Id);
+            movieInDb.Name = movie.Name;
+            movieInDb.GenreId = movie.GenreId;
+            movieInDb.NumberInStock = movie.NumberInStock;            
+            movieInDb.ReleaseDate = movie.ReleaseDate;
+        }
+
+        _context.SaveChanges();
+
+        return RedirectToAction("Index", "Movies");
+    }
+```  
