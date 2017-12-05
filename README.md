@@ -1185,42 +1185,42 @@ using Vidly.ViewModels;
 
 
 
-  &nbsp;
-  ## 30 Edit customers
+&nbsp;
+## 30 Edit customers
 
-  * In *Views/Customers/Index.cshtml* replace the *Details* action in the customer ActionLink with *Edit*. Now, clicking on a customers' name will navigate to the *CustomerForm* view instead of the *Details* view.
+* In *Views/Customers/Index.cshtml* replace the *Details* action in the customer ActionLink with *Edit*. Now, clicking on a customers' name will navigate to the *CustomerForm* view instead of the *Details* view.
+
+```
+<td>@Html.ActionLink(customer.Name, "Edit", "Customers", new { id = customer.Id }, null)</td>
+```
+
+
+* In CustomerController.cs, create the *Edit* action.
+
+  * Select a customer by Id by use of the *SingleOrDefault* method.
+
+  * Define the viewModel and initialize Customer and MembershipTypes.
+
+  * In the return, specify the view name ("CustomerForm").
 
   ```
-  <td>@Html.ActionLink(customer.Name, "Edit", "Customers", new { id = customer.Id }, null)</td>
+      public ActionResult Edit(int id)
+      {
+          var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
+          var membershipTypes = _context.MembershipTypes.ToList();
+
+          if (customer == null)
+              return HttpNotFound();
+
+          var viewModel = new CustomerFormViewModel
+          {
+              Customer = customer,
+              MembershipTypes = membershipTypes
+          };
+
+          return View("CustomerForm", viewModel);
+      }
   ```
-
-
-  * In CustomerController.cs, create the *Edit* action.
-
-    * Select a customer by Id by use of the *SingleOrDefault* method.
-
-    * Define the viewModel and initialize Customer and MembershipTypes.
-
-    * In the return, specify the view name ("CustomerForm").
-
-    ```
-        public ActionResult Edit(int id)
-        {
-            var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
-            var membershipTypes = _context.MembershipTypes.ToList();
-
-            if (customer == null)
-                return HttpNotFound();
-
-            var viewModel = new CustomerFormViewModel
-            {
-                Customer = customer,
-                MembershipTypes = membershipTypes
-            };
-
-            return View("CustomerForm", viewModel);
-        }
-    ```
 
 
 &nbsp;
@@ -1265,4 +1265,51 @@ and replace the conditional in the customer form with the title.
 
 ```
 <h2>@Model.Title</h2>
+```
+
+
+&nbsp;
+## 33 Update the Movie model
+
+* Update the Movie model.
+
+  * In *Movie.cs*, add *Display* attributes in order to display the properties' names properly in the movies form.
+
+  * Make the *ReleaseDate* property nullable.
+
+  * Remove the *Required* attribute from the *Genre* property, since it is only a navigation property, and apply it to *GenreId*.
+
+
+```
+    public class Movie
+    {
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        public string Name { get; set; }
+
+        [Display(Name = "Date Added")]
+        public DateTime DateAdded { get; set; }
+
+        [Display(Name = "Release Date")]
+        public DateTime? ReleaseDate { get; set; }
+
+        [Display(Name = "Number in Stock")]
+        public byte NumberInStock { get; set; }
+
+        public Genre Genre { get; set; }
+
+        [Display(Name = "Genre")]
+        [Required]
+        public byte GenreId { get; set; }
+    }
+```
+
+
+```
+PM> add-migration MakeReleaseDateNullable
+```
+```
+PM> update-database
 ```

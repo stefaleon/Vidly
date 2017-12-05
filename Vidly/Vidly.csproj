@@ -249,6 +249,10 @@
     <Compile Include="Migrations\201712022318366_UpdateTheMovieModel.Designer.cs">
       <DependentUpon>201712022318366_UpdateTheMovieModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712051517125_MakeReleaseDateNullable.cs" />
+    <Compile Include="Migrations\201712051517125_MakeReleaseDateNullable.Designer.cs">
+      <DependentUpon>201712051517125_MakeReleaseDateNullable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Customer.cs" />
@@ -384,6 +388,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712022318366_UpdateTheMovieModel.resx">
       <DependentUpon>201712022318366_UpdateTheMovieModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712051517125_MakeReleaseDateNullable.resx">
+      <DependentUpon>201712051517125_MakeReleaseDateNullable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
