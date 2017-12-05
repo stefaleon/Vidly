@@ -1463,3 +1463,63 @@ using Vidly.Models;
     </tbody>
 </table>
 ```
+
+
+
+&nbsp;
+## 37 New Movie and Edit Movie
+
+* Add the *New* action in *MoviesController.cs*.
+
+  * The genres list is being populated by the dbContext, since the *Genres* DbSet has been already defined in *IdentityModels.cs*.
+
+  * A new Movie object will be assigned to the Movie key in the *viewModel* variable. The *DateAdded* value will be autocompleted with the current date.
+
+  * The returned View will be the *MovieForm*.
+
+*Controllers/MoviesController.cs*
+```
+using Vidly.ViewModels;
+```
+```
+    public ViewResult New()
+    {
+        var genres = _context.Genres.ToList();
+
+        var viewModel = new MovieFormViewModel
+        {
+            Movie = new Movie() { DateAdded = DateTime.Now },
+            Genres = genres
+        };
+
+        return View("MovieForm", viewModel);
+    }
+```
+
+
+* Add the *Edit* action in *MoviesController.cs*.
+
+  * Select a movie by Id by use of the *SingleOrDefault* method.
+
+  * Define the viewModel and initialize Movie and Genres.
+
+  * The returned View will be the *MovieForm*.
+
+```
+    public ActionResult Edit(int id)
+    {
+        var movie = _context.Movies.SingleOrDefault(c => c.Id == id);
+        var genres = _context.Genres.ToList();
+
+        if (movie == null)
+            return HttpNotFound();
+
+        var viewModel = new MovieFormViewModel
+        {
+            Movie = movie,
+            Genres = genres
+        };
+
+        return View("MovieForm", viewModel);
+    }
+```
