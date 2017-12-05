@@ -1413,3 +1413,53 @@ using Vidly.Models;
     <button type="submit" class="btn btn-primary">Save</button>
 }
 ```
+
+
+&nbsp;
+## 36 Update the movies index view
+
+* Edit *Views/Movies/Index.cshtml*.
+
+  * Add the New Movie button. Add an ActionLink which navigates to the New action. Style it as a button with bootstrap classes.
+
+  * Replace the *Details* action in the movies listing ActionLink with *Edit*. Clicking on a movies' name will be navigating to the *MoviesForm* view instead of the *Details* view.
+
+  * Add a table header and related table data in order to display the release year of the movie.
+
+*Views/Movies/Index.cshtml*
+```
+@model IEnumerable<Vidly.Models.Movie>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Movies</h2>
+<p>
+    @Html.ActionLink("New Movie", "New", "Movies", null, new { @class = "btn btn-primary" })
+</p>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Movie</th>
+            <th>Release Year</th>
+            <th>Genre</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movie in Model)
+        {
+        <tr>
+            <td>@Html.ActionLink(movie.Name, "Edit", "Movies", new { id = movie.Id }, null)</td>
+            <td>
+                @if (movie.ReleaseDate != null)
+                {
+                    @movie.ReleaseDate.Value.Year
+                }
+            </td>
+            <td>@movie.Genre.Name</td>
+        </tr>
+        }
+    </tbody>
+</table>
+```
