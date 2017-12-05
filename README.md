@@ -1,5 +1,10 @@
 # Vidly
+An ASP.NET MVC demo project from
 [The Complete ASP.NET MVC 5 Course](https://www.udemy.com/the-complete-aspnet-mvc-5-course/)
+by [Mosh Hamedani ](https://www.udemy.com/user/moshfeghhamedani/)
+
+*Enroll to the course for excellent detailed explanation on everything crucial.*
+
 
 &nbsp;
 ## 00 Start the project
@@ -1312,4 +1317,34 @@ PM> add-migration MakeReleaseDateNullable
 ```
 ```
 PM> update-database
+```
+
+
+&nbsp;
+## 34 Add the MovieFormViewModel
+
+* Inside the *ViewModels* folder, add *MovieFormViewModel.cs*. Include properties for *Movie*, *IEnumerable<Genre>* and a *Title* that will implement the New-or-Edit logic.
+
+```
+using Vidly.Models;
+```
+
+```
+   public class MovieFormViewModel
+   {
+       public IEnumerable<Genre> Genres { get; set; }
+
+       public Movie Movie { get; set; }
+
+       public string Title
+       {
+           get
+           {
+               if (Movie != null && Movie.Id != 0)
+                   return "Edit Movie";
+
+               return "New Movie";
+           }
+       }
+   }
 ```
