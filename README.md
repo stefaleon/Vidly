@@ -1570,7 +1570,7 @@ using Vidly.ViewModels;
 
 
 &nbsp;
-## 39 Add Validation on customer save
+## 39 Add validation on customer save
 
 * In *CustomerController.cs*, in the Save action, add *ModelState* validation. On save button click, redirect to remain in the same form if the model state is not valid.
 
@@ -1629,4 +1629,80 @@ using Vidly.ViewModels;
 [Required(ErrorMessage = "Please enter customer's name.")]
 [StringLength(255)]
 public string Name { get; set; }
+```
+
+
+&nbsp;
+## 40 Custom validation with a business rule for customers age
+
+* We will add a business rule, the requirement that only customers of 18+ years of age will be able to have a membership type different than "Pay As You Go".
+
+* **Avoid magic numbers:** In the logic we will implement, we will need to check for the value of membership type Id. If it is not set, it is autoassigned to the zero value.  We have set the Id for "Pay As You Go" to 1 with the *PopulateMembershipTypes* migration. Define membership types inside the *MembershipType* model in order to avoid magic numbers in the code that will implement the valdation logic..
+
+*Models/MembershipType.cs*
+```
+    public static readonly byte Unknown = 0;
+    public static readonly byte PayAsYouGo = 1;
+```
+
+* **Validation logic:** In the models, add the class *Min18YearsForMembership* that derives from *ValidationAttribute*. Override the *isValid* method, select the overload that contains validation context, so that we can add the validation logic.
+
+*Models/Min18YearsForMembership.cs*
+```
+using System.ComponentModel.DataAnnotations;
+```
+```
+public class Min18YearsForMembership : ValidationAttribute
+{
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    {
+        var customer = (Customer)validationContext.ObjectInstance;
+
+        if (customer.MembershipTypeId == MembershipType.Unknown ||
+            customer.MembershipTypeId == MembershipType.PayAsYouGo)
+            return ValidationResult.Success;            
+
+        if (customer.Birthdate == null)
+            return new ValidationResult("Birthdate is required.");
+
+        var age = GetAge((DateTime)customer.Birthdate);
+
+        return (age >= 18)
+            ? ValidationResult.Success
+            : new ValidationResult("Customer should be at least 18 years old to go on a membership");
+    }
+
+
+    public static Int32 GetAge(DateTime dateOfBirth)
+    // by ScArcher2 in https://stackoverflow.com/questions/9/how-do-i-calculate-someones-age-in-c
+    {
+        var today = DateTime.Today;
+
+        var a = (today.Year * 100 + today.Month) * 100 + today.Day;
+        var b = (dateOfBirth.Year * 100 + dateOfBirth.Month) * 100 + dateOfBirth.Day;
+
+        return (a - b) / 10000;
+    }
+}
+```
+
+* Apply the *Min18YearsForMembership* class as an attribute to the *Birthdate* property of the *Customer* model.
+
+*Models/Customer.cs*
+```
+    [Display(Name="Date of Birth")]
+    [Min18YearsForMembership]
+    public DateTime? Birthdate { get; set; }
+```
+
+
+* Add the validation message placeholder in the *CustomerForm* view.
+
+*Views/Customers/CustomerForm.cshtml*
+```
+<div class="form-group">
+    @Html.LabelFor(m => m.Customer.Birthdate)
+    @Html.TextBoxFor(m => m.Customer.Birthdate, "{0:d MMMM yyyy}", new { @class = "form-control" })
+    @Html.ValidationMessageFor(m => m.Customer.Birthdate)
+</div>
 ```
