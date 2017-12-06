@@ -1706,3 +1706,24 @@ public class Min18YearsForMembership : ValidationAttribute
     @Html.ValidationMessageFor(m => m.Customer.Birthdate)
 </div>
 ```
+
+
+
+&nbsp;
+## 41 Add validation summary messages
+
+* Add the validation summary messages placeholder at the top of the form in the *CustomerForm* view.
+
+```
+@Html.ValidationSummary()
+```
+
+* In *Content/Site.css* style the *validation-summary-errors* class with red color.
+
+```
+.validation-summary-errors {
+    color: red;
+}
+```
+
+* Swap MembershipType and Birthdate input locations on the form to improve the user experience.
