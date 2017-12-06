@@ -905,7 +905,7 @@ var movie = _context.Movies.Include(m => m.Genre).SingleOrDefault(m => m.Id == i
 &nbsp;
 ## 26 Create the New Customer form
 
-* In CustomerController.cs, create the New() action.
+* In CustomersController.cs, create the New() action.
 
 ```
     public ActionResult New()
@@ -985,7 +985,7 @@ namespace Vidly.ViewModels
 }
 ```
 
-* In CustomerController.cs, edit the New() action.  
+* In CustomersController.cs, edit the New() action.  
 
 ```
 using Vidly.ViewModels;
@@ -1062,7 +1062,7 @@ using Vidly.ViewModels;
 ```
 
 
-* In CustomerController.cs, add the Save() action.  
+* In CustomersController.cs, add the Save() action.  
 
   * Apply the *HttpPost* attribute to make sure that the action is called only with the POST HTTP request method.
 
@@ -1200,7 +1200,7 @@ using Vidly.ViewModels;
 ```
 
 
-* In CustomerController.cs, create the *Edit* action.
+* In CustomersController.cs, create the *Edit* action.
 
   * Select a customer by Id by use of the *SingleOrDefault* method.
 
@@ -1572,7 +1572,7 @@ using Vidly.ViewModels;
 &nbsp;
 ## 39 Add validation on customer save
 
-* In *CustomerController.cs*, in the Save action, add *ModelState* validation. On save button click, redirect to remain in the same form if the model state is not valid.
+* In *CustomersController.cs*, in the Save action, add *ModelState* validation. On save button click, redirect to remain in the same form if the model state is not valid.
 
 ```
     if (!ModelState.IsValid)
@@ -1727,3 +1727,40 @@ public class Min18YearsForMembership : ValidationAttribute
 ```
 
 * Swap MembershipType and Birthdate input locations on the form to improve the user experience.
+
+
+
+&nbsp;
+## 42 Add client-side validation to the customer form
+
+* Enable client-side validation for the CustomerForm. All standard data annotations will now be validated on the client. The custom business rules will still be validated on the server.
+
+*Views/Customers/CustomerForm.cshtml*
+```
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}
+```
+
+
+&nbsp;
+## 43 Add an anti-forgery token to the customer form
+
+* Add an *AntiForgeryToken* *Html* helper method call to the CustomerForm.
+
+*Views/Customers/CustomerForm.cshtml*
+```
+    @Html.HiddenFor(m => m.Customer.Id)
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Save</button>
+```
+
+* Then add the *ValidateAntiForgeryToken* attribute to the *Save* action in CustomersController.
+
+*Controllers/CustomersController.cs*
+```
+[HttpPost]
+[ValidateAntiForgeryToken]
+public ActionResult Save(Customer customer)
+```
