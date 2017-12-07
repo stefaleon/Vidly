@@ -1422,7 +1422,7 @@ using Vidly.Models;
 
   * Add the New Movie button. Add an ActionLink which navigates to the New action. Style it as a button with bootstrap classes.
 
-  * Replace the *Details* action in the movies listing ActionLink with *Edit*. Clicking on a movies' name will be navigating to the *MoviesForm* view instead of the *Details* view.
+  * Replace the *Details* action in the movies listing ActionLink with *Edit*. Clicking on a movies' name will be navigating to the *MovieForm* view instead of the *Details* view.
 
   * Add a table header and related table data in order to display the release year of the movie.
 
@@ -1763,4 +1763,84 @@ public class Min18YearsForMembership : ValidationAttribute
 [HttpPost]
 [ValidateAntiForgeryToken]
 public ActionResult Save(Customer customer)
+```
+
+
+## 44 Validating the movies
+
+* In *MoviesController.cs*, in the Save action, add *ModelState* validation. On save button click, remain in the MovieForm if the model state is not valid. Also add the anti-forgery token attribute.
+
+*Controllers/MoviesController.cs*
+```
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult Save(Movie movie)
+    {
+        if (!ModelState.IsValid)
+        {
+            var viewModel = new MovieFormViewModel
+            {
+                Movie = movie,
+                Genres = _context.Genres.ToList()
+        };
+
+            return View("MovieForm", viewModel);
+        }
+  ...      
+```
+
+* Add validation message placeholders in the *MovieForm* view. Also call the *AntiForgeryToken* *Html* helper method and enable client-side validation.
+
+*Views/Movies/MovieForm.cshtml*
+```
+@using (Html.BeginForm("Save", "Movies"))
+{
+    @Html.ValidationSummary()
+    <div class="form-group">
+        @Html.LabelFor(m => m.Movie.Name)
+        @Html.TextBoxFor(m => m.Movie.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Movie.Name)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Movie.DateAdded)
+        @Html.TextBoxFor(m => m.Movie.DateAdded, "{0:d MMMM yyyy}", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Movie.DateAdded)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Movie.ReleaseDate)
+        @Html.TextBoxFor(m => m.Movie.ReleaseDate, "{0:d MMMM yyyy}", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Movie.ReleaseDate)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Movie.GenreId)
+        @Html.DropDownListFor(m => m.Movie.GenreId,
+                     new SelectList(Model.Genres, "Id", "Name"), "", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Movie.GenreId)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Movie.NumberInStock)
+        @Html.TextBoxFor(m => m.Movie.NumberInStock, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Movie.NumberInStock)
+    </div>
+    @Html.HiddenFor(m => m.Movie.Id)
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Save</button>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}
+```
+
+* The validation error styling has been already applied with customer validation.
+
+
+* Add a range between 1 and 20 for the movies stock in the Movie model.
+
+*Models/Movie.cs*
+```
+  [Display(Name = "Number in Stock")]
+  [Range(1, 20)]
+  public byte NumberInStock { get; set; }
 ```
